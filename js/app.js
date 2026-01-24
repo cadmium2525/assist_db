@@ -3,7 +3,7 @@
  */
 document.addEventListener('DOMContentLoaded', async () => {
     // 定数定義 (タグ・カードタイプ等)
-    const COMMON_EVENT_TAGS = ["ステup", "命中率up", "クリ率up", "ステ連撃", "ダメ連撃", "アディション", "完全回避", "シールド", "必中", "デバフ", "連撃軽減・無効・回避", "被ダメカット"];
+    const COMMON_EVENT_TAGS = ["ステup", "命中率up", "クリ率up", "ステ連撃", "ダメ連撃", "アディション", "完全回避", "シールド", "必中", "デバフ", "連撃軽減・無効・回避", "クリ無効", "被ダメカット"];
 
     const TAGS = {
         rarity: ["MR", "SSR", "SR", "R"],
