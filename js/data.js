@@ -67,4 +67,31 @@ window.MASTER_ASSISTS = [
     "source": "master",
     "createdAt": "2026-01-24T14:09:33.028Z"
 },
+{
+    "id": "b5713be9-0b52-4736-b8fe-27b1e366a6e7",
+    "name": "[ラクガキモノ]アライブ",
+    "rarity": "SSR",
+    "monType": "無機",
+    "aura": "黒",
+    "cardType": "丈夫さ",
+    "images": {
+        "card": "images/assist/[ラクガキモノ]アライブ.png",
+        "event1": "images/assist/[ラクガキモノ]アライブ_event1.png",
+        "event3": "images/assist/[ラクガキモノ]アライブ_event3.png"
+    },
+    "events": {
+        "event1": [
+            "ダメ連撃"
+        ],
+        "event2": [
+            "近距離"
+        ],
+        "event3": [
+            "アディション",
+            "ダメ連撃"
+        ]
+    },
+    "source": "master",
+    "createdAt": "2026-01-24T13:02:43.454Z"
+},
 ];
