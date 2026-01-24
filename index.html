@@ -14,11 +14,25 @@
     <header class="header">
         <div class="header-top">
             <h1 class="logo">ASIST CARD DB</h1>
-            <button id="btnOpenRegister" class="icon-btn" aria-label="新規登録">
-                <svg viewBox="0 0 24 24" width="24" height="24">
-                    <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
-                </svg>
-            </button>
+            <div class="header-actions">
+                <button id="btnOpenRequestForm" class="icon-btn action-link-btn" title="追加依頼フォーム">
+                    <svg viewBox="0 0 24 24" width="22" height="22">
+                        <path fill="currentColor"
+                            d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,19H5V5H19V19M11,15H13V17H11V15M11,7H13V13H11V7Z" />
+                    </svg>
+                </button>
+                <button id="btnOpenHelp" class="icon-btn" title="ヘルプ">
+                    <svg viewBox="0 0 24 24" width="22" height="22">
+                        <path fill="currentColor"
+                            d="M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z" />
+                    </svg>
+                </button>
+                <button id="btnOpenRegister" class="icon-btn" aria-label="新規登録">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                    </svg>
+                </button>
+            </div>
         </div>
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="カード名で検索...">
@@ -44,6 +58,13 @@
             <div class="bottom-sheet-header">
                 <h2>フィルター</h2>
                 <button class="close-btn" data-close="filterBottomSheet">&times;</button>
+            </div>
+            <div class="filter-group" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin-bottom:0;">検索方式</h3>
+                <div class="segment-control" id="eventTagsMode">
+                    <button type="button" data-mode="OR" class="active">OR</button>
+                    <button type="button" data-mode="AND">AND</button>
+                </div>
             </div>
             <div class="filter-group">
                 <h3>レアリティ</h3>
@@ -78,13 +99,7 @@
                 </div>
             </div>
             <div class="filter-group">
-                <div class="filter-header-flex">
-                    <h3>能力</h3>
-                    <div class="segment-control" id="eventTagsMode">
-                        <button type="button" data-mode="OR" class="active">OR</button>
-                        <button type="button" data-mode="AND">AND</button>
-                    </div>
-                </div>
+                <h3>能力</h3>
                 <div class="chip-group" id="filterEventTags">
                     <!-- JSで動的に注入 -->
                 </div>
@@ -278,6 +293,34 @@
             </div>
             <div id="detailBody" class="detail-body">
                 <!-- JSで動的に追加 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ヘルプ・ボトムシート -->
+    <div id="helpBottomSheet" class="bottom-sheet">
+        <div class="bottom-sheet-content">
+            <div class="bottom-sheet-header">
+                <h2>ツールの使い方</h2>
+                <button class="close-btn" data-close="helpBottomSheet">&times;</button>
+            </div>
+            <div class="help-content doc-style">
+                <section>
+                    <h3>1. 検索機能</h3>
+                    <p>上部の検索バーにカード名の一部を入れると即座に絞り込まれます。「フィルタ」や「E2検索」ボタンから、レアリティやタイプ、特定の能力で詳細な検索が可能です。</p>
+                </section>
+                <section>
+                    <h3>2. カードの登録</h3>
+                    <p>右上の <span>+</span> ボタンから、自分の持っているカードを登録できます。画像をアップロード後、最適な範囲にクロップ（切り抜き）して保存してください。</p>
+                </section>
+                <section>
+                    <h3>3. 管理者への依頼</h3>
+                    <p>ヘッダーのアンケートアイコンボタンから、公式データの追加依頼フォームへ飛ぶことができます。登録したカードをJSON形式で出力し、その内容をフォームに貼り付けて依頼してください。</p>
+                </section>
+                <section>
+                    <h3>4. データの保存</h3>
+                    <p>このツールで登録したデータは、お使いのブラウザ内（IndexedDB）に安全に保存されます。</p>
+                </section>
             </div>
         </div>
     </div>

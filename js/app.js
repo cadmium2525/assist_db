@@ -68,6 +68,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupModal('btnOpenFilter', 'filterBottomSheet', 'close-btn');
     setupModal('btnOpenEvent2Search', 'event2BottomSheet', 'close-btn');
     setupModal('btnOpenRegister', 'registerModal', 'back-btn');
+    setupModal('btnOpenHelp', 'helpBottomSheet', 'close-btn'); // 追記
+
+    // 追加依頼フォームの処理
+    const btnRequest = document.getElementById('btnOpenRequestForm');
+    if (btnRequest) {
+        btnRequest.onclick = () => {
+            const confirmed = confirm('アシストカードの追加依頼を行うフォームにジャンプします。続けますか？');
+            if (confirmed) {
+                window.open('https://docs.google.com/forms/d/e/1FAIpQLSfY46OUNV1cMD3-CQ-0xkasoywG5hJtLAeZtDcFd7cenEsrHw/viewform?usp=publish-editor', '_blank');
+            }
+        };
+    }
 
     // 詳細表示モーダルの閉じるロジック
     const detailModal = document.getElementById('detailBottomSheet');
@@ -156,25 +168,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (currentFilters.aura.length > 0 && !currentFilters.aura.includes(card.aura)) return false;
             if (currentFilters.cardType.length > 0 && !currentFilters.cardType.includes(card.cardType)) return false;
 
-            // 能力フィルター (統合)
+            // 能力フィルター (統合 & AND/OR切替)
             if (currentFilters.eventTags.length > 0) {
                 const e1 = card.events?.event1 || [];
                 const e3 = card.events?.event3 || [];
-                // 選択されたすべてのタグが、e1またはe3のいずれかに含まれているかを確認 (AND検索の場合)
-                // もしくは、いずれかのタグが含まれていればOKとするなら some(every) 等に調整可能。
-                // ここでは「選択されたタグ条件をすべて満たしている(いずれかの枠で)」とする
-                if (!currentFilters.eventTags.every(tag => e1.includes(tag) || e3.includes(tag))) return false;
+                const combined = [...e1, ...e3];
+
+                if (currentFilters.eventTagsMode === 'AND') {
+                    // すべての選択タグが、いずれかの能力枠に含まれている
+                    if (!currentFilters.eventTags.every(tag => combined.includes(tag))) return false;
+                } else {
+                    // いずれかの選択タグが、いずれかの能力枠に含まれている
+                    if (!currentFilters.eventTags.some(tag => combined.includes(tag))) return false;
+                }
             }
 
             const e2 = card.events?.event2 || [];
-            if (currentFilters.event2Distance.length > 0) {
-                if (!currentFilters.event2Distance.some(tag => e2.includes(tag))) return false;
-            }
-            if (currentFilters.event2Terrain.length > 0) {
-                if (!currentFilters.event2Terrain.some(tag => e2.includes(tag))) return false;
-            }
-            if (currentFilters.event2State.length > 0) {
-                if (!currentFilters.event2State.some(tag => e2.includes(tag))) return false;
+            const selectedE2Tags = [
+                ...currentFilters.event2Distance,
+                ...currentFilters.event2Terrain,
+                ...currentFilters.event2State
+            ];
+            if (selectedE2Tags.length > 0) {
+                // E2検索はOR検索（いずれかに一致すればOK）
+                if (!selectedE2Tags.some(tag => e2.includes(tag))) return false;
             }
             return true;
         });
