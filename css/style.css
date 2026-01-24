@@ -358,6 +358,10 @@ body {
     box-shadow: 0 0 10px var(--primary-glow);
 }
 
+.radio-chip-group .chip input[type="radio"] {
+    display: none;
+}
+
 /* Full Modal */
 .full-modal {
     position: fixed;
@@ -626,4 +630,43 @@ body {
 .aspect-ratio-selector button.active {
     background: var(--primary-color);
     border-color: var(--primary-color);
+}
+
+/* Accordion */
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 0;
+}
+
+.accordion-header h3 {
+    margin: 0 !important;
+}
+
+.accordion-header .arrow {
+    transition: transform 0.3s;
+    color: var(--text-muted);
+}
+
+.accordion.open .accordion-header .arrow {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.accordion.open .accordion-content {
+    max-height: 1000px;
+    margin-top: 10px;
+}
+
+.icon-chip-group.radio-chip-group .chip input:checked+span {
+    background: var(--primary-glow);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-glow);
 }

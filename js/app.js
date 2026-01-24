@@ -2,7 +2,9 @@
  * メインアプリケーションロジック
  */
 document.addEventListener('DOMContentLoaded', async () => {
-    // 定数定義 (タグ・タイプ等)
+    // 定数定義 (タグ・カードタイプ等)
+    const COMMON_EVENT_TAGS = ["ステup", "命中率up", "クリ率up", "ステ連撃", "ダメ連撃", "完全回避", "シールド", "必中", "デバフ", "連撃軽減・無効・回避", "被ダメカット"];
+
     const TAGS = {
         rarity: ["MR", "SSR", "SR", "R"],
         monType: ["無機", "創造", "幻霊", "魔族", "獣族", "怪物"],
@@ -14,11 +16,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             "ジャッジ", "サバイブ", "クイック", "ルミナス", "フォーカス",
             "メンタル", "バイタル"
         ],
-        event1: ["攻撃UP", "追撃", "完全回避", "シールド", "必中", "デバフ", "クリ率up", "連撃無効", "被ダメカット"],
+        eventTags: COMMON_EVENT_TAGS, // 能力①・③共通
         event2Distance: ["零距離", "近距離", "中距離", "遠距離"],
         event2Terrain: ["雪山", "火山", "砂漠", "海岸", "森林"],
-        event2State: ["超必死", "超本気", "超闘魂", "超根性", "超逆上"],
-        event3: ["攻撃UP", "追撃", "完全回避", "シールド", "必中", "デバフ", "クリ率up", "連撃無効", "被ダメカット"]
+        event2State: ["超必死", "超本気", "超闘魂", "超根性", "超逆上"]
     };
 
     // 状態管理
@@ -105,11 +106,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             `).join('');
         };
 
-        renderGroup('regEvent1Tags', TAGS.event1, 'checkbox', 'regEvent1Tags');
+        renderGroup('regEvent1Tags', TAGS.eventTags, 'checkbox', 'regEvent1Tags');
         renderGroup('regEvent2Tags', [...TAGS.event2Distance, ...TAGS.event2Terrain, ...TAGS.event2State], 'radio', 'regEvent2Tags');
-        renderGroup('regEvent3Tags', TAGS.event3, 'checkbox', 'regEvent3Tags');
+        renderGroup('regEvent3Tags', TAGS.eventTags, 'checkbox', 'regEvent3Tags');
 
-        // タイプ選択セレクトボックス
+        // 登録用オーラアイコン
+        const regAuraContainer = document.getElementById('regAura');
+        if (regAuraContainer) {
+            regAuraContainer.innerHTML = TAGS.aura.map(tag => `
+                <label class="chip">
+                    <input type="radio" name="aura" value="${tag}" required>
+                    <span><img src="${getAuraIcon(tag)}" alt="${tag}" title="${tag}" class="aura-icon-mini"></span>
+                </label>
+            `).join('');
+        }
+
+        // カードタイプ選択セレクトボックス
         const typeSelect = document.getElementById('regCardType');
         if (typeSelect) {
             typeSelect.innerHTML = TAGS.cardType.map(t => `<option value="${t}">${t}</option>`).join('');
@@ -143,10 +155,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         renderAuraGroup('filterAura', TAGS.aura);
         renderGroup('filterCardType', TAGS.cardType);
-        renderGroup('filterEventTags', TAGS.event1); // event1とevent3は同じマスタを使用している前提
+        renderGroup('filterEventTags', TAGS.eventTags);
         renderGroup('filterEvent2Distance', TAGS.event2Distance);
         renderGroup('filterEvent2Terrain', TAGS.event2Terrain);
         renderGroup('filterEvent2State', TAGS.event2State);
+
+        // アコーディオン制御 (カードタイプ用)
+        const accCardType = document.getElementById('accCardType');
+        if (accCardType) {
+            const header = accCardType.querySelector('.accordion-header');
+            header.onclick = () => {
+                accCardType.classList.toggle('open');
+            };
+        }
     }
 
     // --- データ統合と表示 ---
@@ -236,7 +257,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <img src="${cardImg}" class="detail-main-img">
             <div class="detail-info-grid">
                 <div class="detail-info-item"><label>レアリティ</label><span>${card.rarity}</span></div>
-                <div class="detail-info-item"><label>タイプ</label><span>${card.cardType || 'なし'}</span></div>
+                <div class="detail-info-item"><label>カードタイプ</label><span>${card.cardType || 'なし'}</span></div>
                 <div class="detail-info-item"><label>モン類</label><span>${card.monType}</span></div>
                 <div class="detail-info-item"><label>オーラ</label><span><img src="${getAuraIcon(card.aura)}" class="aura-icon-mini"> ${card.aura}</span></div>
                 <div class="detail-info-item"><label>データ種別</label><span>${card.source === 'master' ? 'マスターデータ' : 'マイカード'}</span></div>
@@ -459,15 +480,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         };
         const json = JSON.stringify(data, null, 2);
-        navigator.clipboard.writeText(json).then(() => {
-            alert('JSONをクリップボードにコピーしました。');
-        }).catch(() => {
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${card.name}.json`;
-            a.click();
-        });
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${card.name}.json`;
+        document.body.appendChild(a); // DOMに追加して確実に動作させる
+        a.click();
+        document.body.removeChild(a); // 実行後に削除
+        URL.revokeObjectURL(url); // メモリ解放
     }
 });
