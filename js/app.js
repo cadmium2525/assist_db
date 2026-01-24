@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', async () => {
              ${card.source === 'user' ? `
                 <div class="action-footer" style="margin-top:20px;">
                     <button id="btnEditCard" class="primary-btn" style="flex:1;">編集</button>
-                    <button id="btnExportCard" class="secondary-btn" style="flex:1;">JSON出力</button>
+                    <button id="btnExportCard" class="secondary-btn" style="flex:1;">コード出力</button>
                     <button id="btnDeleteCard" class="secondary-btn" style="flex:1; color:#ef4444; border-color:#ef4444;">削除</button>
                 </div>
             ` : ''}
