@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 状態管理
     let allCards = [];
+    let editingCardId = null; // 編集中のカードID
     let currentFilters = {
         rarity: [],
         monType: [],
@@ -55,7 +56,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         const btn = document.getElementById(btnId);
         const modal = document.getElementById(modalId);
         if (btn && modal) {
-            btn.onclick = () => modal.classList.add('open');
+            btn.onclick = () => {
+                if (modalId === 'registerModal') {
+                    // 新規登録時は状態リセット
+                    editingCardId = null;
+                    document.getElementById('cardForm').reset();
+                    resetCropStates();
+                }
+                modal.classList.add('open');
+            };
             modal.onclick = (e) => {
                 if (e.target.classList.contains('bottom-sheet') || e.target.classList.contains('close-btn') || e.target.classList.contains('back-btn')) {
                     modal.classList.remove('open');
@@ -174,7 +183,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function refreshApp() {
         const userCards = await dbManager.getAll();
         const masterCards = window.MASTER_ASSISTS || [];
-        allCards = [...masterCards, ...userCards];
+
+        // 重複チェック: マスターデータに同じ名前があればマイカードを削除
+        const masterNames = new Set(masterCards.map(c => c.name));
+        for (const uCard of userCards) {
+            if (masterNames.has(uCard.name)) {
+                console.log(`マスターデータとの重複を検出: ${uCard.name} を削除します。`);
+                await dbManager.delete(uCard.id);
+            }
+        }
+
+        // 削除後に最新を取得し直す
+        const finalUserCards = await dbManager.getAll();
+        allCards = [...masterCards, ...finalUserCards];
         renderCards();
     }
 
@@ -292,8 +313,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
             </div>
 
-            ${card.source === 'user' ? `
+             ${card.source === 'user' ? `
                 <div class="action-footer" style="margin-top:20px;">
+                    <button id="btnEditCard" class="primary-btn" style="flex:1;">編集</button>
                     <button id="btnExportCard" class="secondary-btn" style="flex:1;">JSON出力</button>
                     <button id="btnDeleteCard" class="secondary-btn" style="flex:1; color:#ef4444; border-color:#ef4444;">削除</button>
                 </div>
@@ -301,6 +323,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
 
         if (card.source === 'user') {
+            document.getElementById('btnEditCard').onclick = () => {
+                modal.classList.remove('open');
+                openEditModal(card);
+            };
             document.getElementById('btnDeleteCard').onclick = async () => {
                 if (confirm('このカードを削除しますか？')) {
                     await dbManager.delete(card.id);
@@ -414,6 +440,58 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupImageCropper('event1', 'inputEvent1Img', 'cropAreaEvent1', 'cropImageEvent1', 'aspectRatioSelectorEvent1', 'btnDoCropEvent1', 'previewEvent1Img');
     setupImageCropper('event3', 'inputEvent3Img', 'cropAreaEvent3', 'cropImageEvent3', 'aspectRatioSelectorEvent3', 'btnDoCropEvent3', 'previewEvent3Img');
 
+    // --- カード編集モード ---
+    function openEditModal(card) {
+        editingCardId = card.id;
+        const form = document.getElementById('cardForm');
+        document.querySelector('#registerModal h2').textContent = 'カード編集';
+        document.getElementById('btnSaveCard').textContent = '更新';
+
+        // 値のセット
+        form.name.value = card.name;
+        form.rarity.value = card.rarity;
+        form.monType.value = card.monType;
+        form.cardType.value = card.cardType;
+
+        // オーラ
+        const auraInput = form.querySelector(`input[name="aura"][value="${card.aura}"]`);
+        if (auraInput) auraInput.checked = true;
+
+        // タグの復元
+        const setTags = (containerId, tags) => {
+            const inputs = document.querySelectorAll(`#${containerId} input`);
+            inputs.forEach(i => i.checked = tags.includes(i.value));
+        };
+        setTags('regEvent1Tags', card.events.event1);
+        setTags('regEvent2Tags', card.events.event2);
+        setTags('regEvent3Tags', card.events.event3);
+
+        // 画像のプレビュー (既存)
+        document.getElementById('previewCardImg').innerHTML = `<img src="${getImgSrc(card.images.card)}">`;
+        document.getElementById('previewEvent1Img').innerHTML = card.images.event1 ? `<img src="${getImgSrc(card.images.event1)}">` : '';
+        document.getElementById('previewEvent3Img').innerHTML = card.images.event3 ? `<img src="${getImgSrc(card.images.event3)}">` : '';
+
+        // クロップ用の一時保持（変更しない場合はこれを使う）
+        cropStates.card.blob = card.images.card;
+        cropStates.event1.blob = card.images.event1;
+        cropStates.event3.blob = card.images.event3;
+
+        document.getElementById('registerModal').classList.add('open');
+    }
+
+    function resetCropStates() {
+        Object.keys(cropStates).forEach(k => {
+            cropStates[k].blob = null;
+            if (cropStates[k].cropper) cropStates[k].cropper.destroy();
+            cropStates[k].cropper = null;
+        });
+        document.getElementById('previewCardImg').innerHTML = '';
+        document.getElementById('previewEvent1Img').innerHTML = '';
+        document.getElementById('previewEvent3Img').innerHTML = '';
+        document.querySelector('#registerModal h2').textContent = 'カード登録';
+        document.getElementById('btnSaveCard').textContent = '保存';
+    }
+
     // --- カード保存 ---
     document.getElementById('btnSaveCard').onclick = async () => {
         const form = document.getElementById('cardForm');
@@ -424,7 +502,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const getCheckedValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
 
         const newCard = {
-            id: crypto.randomUUID(),
+            id: editingCardId || crypto.randomUUID(),
             name: formData.get('name'),
             rarity: formData.get('rarity'),
             monType: formData.get('monType'),
@@ -441,7 +519,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 event3: getCheckedValues('regEvent3Tags')
             },
             source: 'user',
-            createdAt: new Date().toISOString()
+            createdAt: editingCardId ? allCards.find(c => c.id === editingCardId)?.createdAt : new Date().toISOString()
         };
 
         await dbManager.save(newCard);
