@@ -571,14 +571,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         // 貼り付けやすいように、末尾にカンマをつけた整形済みJSオブジェクト風の文字列にする
-        // 純粋なJSONとしても機能し、data.jsへの貼り付けにも適している
         const jsonContent = JSON.stringify(data, null, 4) + ",";
 
-        const blob = new Blob([jsonContent], { type: 'text/javascript' });
+        // ダウンロード処理
+        // application/octet-stream を使用することで、ブラウザが勝手に拡張子を追加するのを防ぐ
+        const blob = new Blob([jsonContent], { type: 'application/octet-stream' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${card.name}.txt`; // 貼り付け用テキストとして保存
+        a.download = `${card.name}.txt`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
