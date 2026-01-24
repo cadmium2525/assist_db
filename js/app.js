@@ -238,7 +238,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             return true;
         });
 
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        // ソート: レアリティ順 (MR > SSR > SR > R) -> その中で新しい順
+        const rarityPriority = { "MR": 4, "SSR": 3, "SR": 2, "R": 1 };
+        filtered.sort((a, b) => {
+            const pA = rarityPriority[a.rarity] || 0;
+            const pB = rarityPriority[b.rarity] || 0;
+            if (pA !== pB) return pB - pA; // レアリティが高い順
+            return new Date(b.createdAt) - new Date(a.createdAt); // 日時が新しい順
+        });
 
         filtered.forEach(card => {
             const div = document.createElement('div');
