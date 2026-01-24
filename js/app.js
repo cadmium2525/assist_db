@@ -3,7 +3,7 @@
  */
 document.addEventListener('DOMContentLoaded', async () => {
     // 定数定義 (タグ・カードタイプ等)
-    const COMMON_EVENT_TAGS = ["ステup", "命中率up", "クリ率up", "ステ連撃", "ダメ連撃", "完全回避", "シールド", "必中", "デバフ", "連撃軽減・無効・回避", "被ダメカット"];
+    const COMMON_EVENT_TAGS = ["ステup", "命中率up", "クリ率up", "ステ連撃", "ダメ連撃", "アディション", "完全回避", "シールド", "必中", "デバフ", "連撃軽減・無効・回避", "被ダメカット"];
 
     const TAGS = {
         rarity: ["MR", "SSR", "SR", "R"],
@@ -462,32 +462,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- JSONエクスポート ---
     function exportToJSON(card) {
+        // data.js の形式に合わせる
         const data = {
+            id: card.id, // 必要に応じて管理者が修正
             name: card.name,
             rarity: card.rarity,
             monType: card.monType,
             aura: card.aura,
             cardType: card.cardType,
+            images: {
+                // マスターデータでは images/assist/ 配下を想定
+                card: `images/assist/${card.name}.png`,
+                event1: card.images.event1 ? `images/assist/${card.name}_event1.png` : null,
+                event3: card.images.event3 ? `images/assist/${card.name}_event3.png` : null
+            },
             events: {
                 event1: card.events.event1 || [],
                 event2: card.events.event2 || [],
                 event3: card.events.event3 || []
             },
-            images: {
-                card: card.name + ".png",
-                event1: card.name + "_event1.png",
-                event3: card.name + "_event3.png"
-            }
+            source: "master", // マスターデータとして扱う
+            createdAt: card.createdAt
         };
-        const json = JSON.stringify(data, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
+
+        // 貼り付けやすいように、末尾にカンマをつけた整形済みJSオブジェクト風の文字列にする
+        // 純粋なJSONとしても機能し、data.jsへの貼り付けにも適している
+        const jsonContent = JSON.stringify(data, null, 4) + ",";
+
+        const blob = new Blob([jsonContent], { type: 'text/javascript' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${card.name}.json`;
-        document.body.appendChild(a); // DOMに追加して確実に動作させる
+        a.download = `${card.name}.txt`; // 貼り付け用テキストとして保存
+        document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a); // 実行後に削除
-        URL.revokeObjectURL(url); // メモリ解放
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 });
