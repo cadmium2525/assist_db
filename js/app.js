@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', async () => {
              ${card.source === 'user' ? `
                 <div class="action-footer" style="margin-top:20px;">
                     <button id="btnEditCard" class="primary-btn" style="flex:1;">編集</button>
-                    <button id="btnExportCard" class="secondary-btn" style="flex:1;">コード出力</button>
+                    <button id="btnExportCard" class="secondary-btn" style="flex:1;">JSON出力</button>
                     <button id="btnDeleteCard" class="secondary-btn" style="flex:1; color:#ef4444; border-color:#ef4444;">削除</button>
                 </div>
             ` : ''}
@@ -574,12 +574,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         const jsonContent = JSON.stringify(data, null, 4) + ",";
 
         // ダウンロード処理
-        // application/octet-stream を使用することで、ブラウザが勝手に拡張子を追加するのを防ぐ
-        const blob = new Blob([jsonContent], { type: 'application/octet-stream' });
+        const blob = new Blob([jsonContent], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${card.name}.txt`;
+        a.download = `${card.name}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
