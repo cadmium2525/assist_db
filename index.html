@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ASIST CARD DB</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+</head>
+
+<body class="dark-theme">
+    <header class="header">
+        <div class="header-top">
+            <h1 class="logo">ASIST CARD DB</h1>
+            <button id="btnOpenRegister" class="icon-btn" aria-label="新規登録">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                </svg>
+            </button>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="カード名で検索...">
+            <button id="btnOpenFilter" class="filter-btn">
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                    <path fill="currentColor" d="M3,2H21V2H21V4H18.5L14,10.17V17L10,21V10.17L5.5,4H3V2Z" />
+                </svg>
+                <span>フィルタ</span>
+            </button>
+            <button id="btnOpenEvent2Search" class="event2-search-btn">
+                <span>E2検索</span>
+            </button>
+        </div>
+    </header>
+
+    <main id="cardList" class="card-grid">
+        <!-- カード画像が3列グリッドでここに挿入されます -->
+    </main>
+
+    <!-- フィルタ・ボトムシート -->
+    <div id="filterBottomSheet" class="bottom-sheet">
+        <div class="bottom-sheet-content">
+            <div class="bottom-sheet-header">
+                <h2>フィルター</h2>
+                <button class="close-btn" data-close="filterBottomSheet">&times;</button>
+            </div>
+            <div class="filter-group">
+                <h3>レアリティ</h3>
+                <div class="chip-group" id="filterRarity">
+                    <label class="chip"><input type="checkbox" value="MR"><span>MR</span></label>
+                    <label class="chip"><input type="checkbox" value="SSR"><span>SSR</span></label>
+                    <label class="chip"><input type="checkbox" value="SR"><span>SR</span></label>
+                    <label class="chip"><input type="checkbox" value="R"><span>R</span></label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <h3>モン類</h3>
+                <div class="chip-group" id="filterMonType">
+                    <label class="chip"><input type="checkbox" value="無機"><span>無機</span></label>
+                    <label class="chip"><input type="checkbox" value="創造"><span>創造</span></label>
+                    <label class="chip"><input type="checkbox" value="幻霊"><span>幻霊</span></label>
+                    <label class="chip"><input type="checkbox" value="魔族"><span>魔族</span></label>
+                    <label class="chip"><input type="checkbox" value="獣族"><span>獣族</span></label>
+                    <label class="chip"><input type="checkbox" value="怪物"><span>怪物</span></label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <h3>オーラ</h3>
+                <div class="chip-group icon-chip-group" id="filterAura">
+                    <!-- JSで動的に注入 (アイコン化) -->
+                </div>
+            </div>
+            <div class="filter-group">
+                <h3>タイプ</h3>
+                <div class="chip-group" id="filterCardType">
+                    <!-- JSで動的に注入 -->
+                </div>
+            </div>
+            <div class="filter-group">
+                <div class="filter-header-flex">
+                    <h3>能力</h3>
+                    <div class="segment-control" id="eventTagsMode">
+                        <button type="button" data-mode="OR" class="active">OR</button>
+                        <button type="button" data-mode="AND">AND</button>
+                    </div>
+                </div>
+                <div class="chip-group" id="filterEventTags">
+                    <!-- JSで動的に注入 -->
+                </div>
+            </div>
+            <div class="action-footer">
+                <button id="btnResetFilter" class="secondary-btn">リセット</button>
+                <button id="btnApplyFilter" class="primary-btn">適用</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- イベント2専用検索・ボトムシート -->
+    <div id="event2BottomSheet" class="bottom-sheet">
+        <div class="bottom-sheet-content">
+            <div class="bottom-sheet-header">
+                <h2>イベント②検索</h2>
+                <button class="close-btn" data-close="event2BottomSheet">&times;</button>
+            </div>
+            <div class="filter-group">
+                <h3>距離適正</h3>
+                <div class="chip-group" id="filterEvent2Distance">
+                    <!-- JSで動的に注入 -->
+                </div>
+            </div>
+            <div class="filter-group">
+                <h3>地形適正</h3>
+                <div class="chip-group" id="filterEvent2Terrain">
+                    <!-- JSで動的に注入 -->
+                </div>
+            </div>
+            <div class="filter-group">
+                <h3>状態変化</h3>
+                <div class="chip-group" id="filterEvent2State">
+                    <!-- JSで動的に注入 -->
+                </div>
+            </div>
+            <div class="action-footer">
+                <button id="btnResetEvent2" class="secondary-btn">リセット</button>
+                <button id="btnApplyEvent2" class="primary-btn">適用</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新規登録モーダル (フルスクリーン) -->
+    <div id="registerModal" class="full-modal">
+        <div class="modal-header">
+            <button class="back-btn" id="btnBackRegister">閉じる</button>
+            <h2>カード登録</h2>
+            <button id="btnSaveCard" class="save-link">保存</button>
+        </div>
+        <form id="cardForm" class="modal-body">
+            <div class="form-group">
+                <label>カード名</label>
+                <input type="text" name="name" required placeholder="カード名を入力">
+            </div>
+            <div class="form-row">
+                <div class="form-group half">
+                    <label>レアリティ</label>
+                    <select name="rarity" required>
+                        <option value="MR">MR</option>
+                        <option value="SSR" selected>SSR</option>
+                        <option value="SR">SR</option>
+                        <option value="R">R</option>
+                    </select>
+                </div>
+                <div class="form-group half">
+                    <label>モン類</label>
+                    <select name="monType" required>
+                        <option value="無機">無機</option>
+                        <option value="創造">創造</option>
+                        <option value="幻霊">幻霊</option>
+                        <option value="魔族">魔族</option>
+                        <option value="獣族">獣族</option>
+                        <option value="怪物">怪物</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>オーラ</label>
+                <select name="aura" required>
+                    <option value="赤">赤</option>
+                    <option value="青">青</option>
+                    <option value="黄">黄</option>
+                    <option value="緑">緑</option>
+                    <option value="白">白</option>
+                    <option value="黒">黒</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>タイプ</label>
+                <select name="cardType" id="regCardType" required>
+                    <!-- JSで動的に注入 -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label>カード画像 (必須)</label>
+                <input type="file" id="inputCardImg" accept="image/*" required>
+                <div id="cropArea" class="crop-area" style="display:none;">
+                    <img id="cropImage">
+                    <div class="crop-controls">
+                        <div class="aspect-ratio-selector" id="aspectRatioSelector">
+                            <button type="button" data-ratio="NaN">Free</button>
+                            <button type="button" data-ratio="1" class="active">1:1</button>
+                            <button type="button" data-ratio="1.333">4:3</button>
+                            <button type="button" data-ratio="1.777">16:9</button>
+                        </div>
+                        <button type="button" id="btnDoCrop" class="primary-btn">選択した範囲で確定</button>
+                    </div>
+                </div>
+                <div id="previewCardImg" class="img-preview"></div>
+            </div>
+
+            <hr>
+
+            <div class="form-section">
+                <h3>イベント①</h3>
+                <div class="form-group">
+                    <label>能力選択</label>
+                    <div class="chip-group" id="regEvent1Tags">
+                        <!-- JSで動的に追加 -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>能力画像 (任意)</label>
+                    <input type="file" id="inputEvent1Img" accept="image/*">
+                    <div id="cropAreaEvent1" class="crop-area" style="display:none;">
+                        <img id="cropImageEvent1">
+                        <div class="crop-controls">
+                            <div class="aspect-ratio-selector" id="aspectRatioSelectorEvent1">
+                                <button type="button" data-ratio="NaN">Free</button>
+                                <button type="button" data-ratio="1" class="active">1:1</button>
+                                <button type="button" data-ratio="1.333">4:3</button>
+                                <button type="button" data-ratio="1.777">16:9</button>
+                            </div>
+                            <button type="button" id="btnDoCropEvent1" class="primary-btn">確定</button>
+                        </div>
+                    </div>
+                    <div id="previewEvent1Img" class="img-preview mini"></div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="form-section">
+                <h3>イベント② (1つのみ選択)</h3>
+                <div class="form-group">
+                    <label>マスク能力</label>
+                    <div class="chip-group-radio" id="regEvent2Tags">
+                        <!-- JSで動的に追加 -->
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="form-section">
+                <h3>イベント③</h3>
+                <div class="form-group">
+                    <label>能力選択</label>
+                    <div class="chip-group" id="regEvent3Tags">
+                        <!-- JSで動的に追加 -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>能力画像 (任意)</label>
+                    <input type="file" id="inputEvent3Img" accept="image/*">
+                    <div id="cropAreaEvent3" class="crop-area" style="display:none;">
+                        <img id="cropImageEvent3">
+                        <div class="crop-controls">
+                            <div class="aspect-ratio-selector" id="aspectRatioSelectorEvent3">
+                                <button type="button" data-ratio="NaN">Free</button>
+                                <button type="button" data-ratio="1" class="active">1:1</button>
+                                <button type="button" data-ratio="1.333">4:3</button>
+                                <button type="button" data-ratio="1.777">16:9</button>
+                            </div>
+                            <button type="button" id="btnDoCropEvent3" class="primary-btn">確定</button>
+                        </div>
+                    </div>
+                    <div id="previewEvent3Img" class="img-preview mini"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- カード詳細ボトムシート -->
+    <div id="detailBottomSheet" class="bottom-sheet">
+        <div class="bottom-sheet-content">
+            <div class="bottom-sheet-header">
+                <h2 id="detailName">カード詳細</h2>
+                <button class="close-btn" data-close="detailBottomSheet">&times;</button>
+            </div>
+            <div id="detailBody" class="detail-body">
+                <!-- JSで動的に追加 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 各種スクリプト -->
+    <script src="js/data.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

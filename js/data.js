@@ -1,0 +1,46 @@
+/**
+ * マスターデータ定義
+ * 管理者はこのファイルを直接編集してカードを追加する
+ */
+window.MASTER_ASSISTS = [
+    {
+        id: "master-001",
+        name: "[スターギフト]ギフトン",
+        rarity: "MR",
+        monType: "無機",
+        aura: "黄",
+        cardType: "アサルト",
+        images: {
+            card: "images/assist/[スターギフト]ギフトン.png",
+            event1: "images/assist/[スターギフト]ギフトン_event1.png",
+            event3: "images/assist/[スターギフト]ギフトン_event3.png"
+        },
+        events: {
+            event1: ["攻撃UP", "追撃"],
+            event2: ["雪山"],
+            event3: ["完全回避", "追撃"]
+        },
+        source: "master",
+        createdAt: "2024-01-01T00:00:00Z"
+    },
+    {
+        id: "master-002",
+        name: "[ニャー]リッピー",
+        rarity: "MR",
+        monType: "無機",
+        aura: "白",
+        cardType: "フォース",
+        images: {
+            card: "images/assist/[ニャー]リッピー.png",
+            event1: "images/assist/[ニャー]リッピー_event1.png",
+            event3: "images/assist/[ニャー]リッピー_event3.png"
+        },
+        events: {
+            event1: ["被ダメカット", "連撃無効"],
+            event2: ["超必死"],
+            event3: ["必中"]
+        },
+        source: "master",
+        createdAt: "2024-01-02T00:00:00Z"
+    }
+];
