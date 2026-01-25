@@ -340,4 +340,62 @@ window.MASTER_ASSISTS = [
     "source": "master",
     "createdAt": "2026-01-25T13:19:10.818Z"
 },
+{
+    "id": "3570c117-13c3-49e3-811d-cf78e978e42d",
+    "name": "[ともに歩む未来]朝倉 葉",
+    "rarity": "MR",
+    "monType": "魔族",
+    "aura": "緑",
+    "cardType": "テクニック",
+    "images": {
+        "card": "images/assist/[ともに歩む未来]朝倉 葉.png",
+        "event1": "images/assist/[ともに歩む未来]朝倉 葉_event1.png",
+        "event3": "images/assist/[ともに歩む未来]朝倉 葉_event3.png",
+        "hirameki": "images/assist/[ともに歩む未来]朝倉 葉_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "ステup",
+            "連撃軽減・無効・回避"
+        ],
+        "event2": [
+            "中距離"
+        ],
+        "event3": [
+            "ステup",
+            "命中率up"
+        ],
+        "hirameki": []
+    },
+    "source": "master",
+    "createdAt": "2026-01-25T13:36:56.578Z"
+},
+{
+    "id": "5e9b6a51-a287-46ed-b14e-beb3bda8d0a7",
+    "name": "[モッチー]ラムスウィート",
+    "rarity": "MR",
+    "monType": "幻霊",
+    "aura": "赤",
+    "cardType": "インパクト",
+    "images": {
+        "card": "images/assist/[モッチー]ラムスウィート.png",
+        "event1": "images/assist/[モッチー]ラムスウィート_event1.png",
+        "event3": "images/assist/[モッチー]ラムスウィート_event3.png",
+        "hirameki": "images/assist/[モッチー]ラムスウィート_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "クリ率up"
+        ],
+        "event2": [
+            "超根性"
+        ],
+        "event3": [
+            "クリダメup"
+        ],
+        "hirameki": []
+    },
+    "source": "master",
+    "createdAt": "2026-01-25T13:46:22.896Z"
+},
 ];
