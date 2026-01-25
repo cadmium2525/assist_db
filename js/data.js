@@ -310,4 +310,34 @@ window.MASTER_ASSISTS = [
     "source": "master",
     "createdAt": "2026-01-25T12:35:50.083Z"
 },
+{
+    "id": "99fd67f6-a7eb-4ddc-a08e-bfbf0b5fce44",
+    "name": "[鮮血の戦乙女]シャルティア",
+    "rarity": "SSR",
+    "monType": "無機",
+    "aura": "赤",
+    "cardType": "回避",
+    "images": {
+        "card": "images/assist/[鮮血の戦乙女]シャルティア.png",
+        "event1": "images/assist/[鮮血の戦乙女]シャルティア_event1.png",
+        "event3": "images/assist/[鮮血の戦乙女]シャルティア_event3.png",
+        "hirameki": "images/assist/[鮮血の戦乙女]シャルティア_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "ダメ連撃",
+            "連撃軽減・無効・回避"
+        ],
+        "event2": [
+            "遠距離"
+        ],
+        "event3": [
+            "完全回避",
+            "シールド"
+        ],
+        "hirameki": []
+    },
+    "source": "master",
+    "createdAt": "2026-01-25T13:19:10.818Z"
+},
 ];
