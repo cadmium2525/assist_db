@@ -274,9 +274,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const div = document.createElement('div');
             div.className = 'card-grid-item';
             const src = getImgSrc(card.images.card);
+            const auraIcon = getAuraIcon(card.aura);
             div.innerHTML = `
                 <img src="${src}" alt="${card.name}" loading="lazy">
                 <div class="rarity-badge">${card.rarity}</div>
+                <img src="${auraIcon}" class="aura-badge" alt="${card.aura}">
             `;
             div.onclick = () => showDetail(card);
             container.appendChild(div);
