@@ -3,7 +3,8 @@
  */
 document.addEventListener('DOMContentLoaded', async () => {
     // 定数定義 (タグ・カードタイプ等)
-    const COMMON_EVENT_TAGS = ["ステup", "命中率up", "クリ率up", "ステ連撃", "ダメ連撃", "アディション", "完全回避", "シールド", "必中", "デバフ", "連撃軽減・無効・回避", "クリ無効", "被ダメカット"];
+    const COMMON_EVENT_TAGS = ["ステup", "クリダメup", "命中率up", "クリ率up", "ステ連撃", "ダメ連撃", "アディション", "完全回避", "シールド", "必中", "デバフ", "連撃軽減・無効・回避", "クリ無効", "被ダメカット", "ガッツ回復"];
+    const HIRAMEKI_TAGS = ["不屈", "堅固", "シールド", "連撃", "クリダメup"];
 
     const TAGS = {
         rarity: ["MR", "SSR", "SR", "R"],
@@ -17,9 +18,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             "メンタル", "バイタル"
         ],
         eventTags: COMMON_EVENT_TAGS, // 能力①・③共通
+        hiramekiTags: HIRAMEKI_TAGS, // ひらめき能力
         event2Distance: ["零距離", "近距離", "中距離", "遠距離"],
         event2Terrain: ["雪山", "火山", "砂漠", "海岸", "森林"],
-        event2State: ["超必死", "超本気", "超闘魂", "超根性", "超逆上"]
+        event2State: ["超必死", "超本気", "超闘魂", "超根性", "超逆上", "超憤怒", "超余裕"]
     };
 
     // 状態管理
@@ -31,6 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         aura: [],
         cardType: [],
         eventTags: [],
+        hiramekiTags: [], // 追加
         eventTagsMode: 'OR', // 追加
         event2Distance: [],
         event2Terrain: [],
@@ -42,7 +45,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const cropStates = {
         card: { cropper: null, blob: null },
         event1: { cropper: null, blob: null },
-        event3: { cropper: null, blob: null }
+        event3: { cropper: null, blob: null },
+        hirameki: { cropper: null, blob: null } // 追加
     };
 
     // 初期化
@@ -76,9 +80,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     setupModal('btnOpenFilter', 'filterBottomSheet', 'close-btn');
-    setupModal('btnOpenEvent2Search', 'event2BottomSheet', 'close-btn');
     setupModal('btnOpenRegister', 'registerModal', 'back-btn');
-    setupModal('btnOpenHelp', 'helpBottomSheet', 'close-btn'); // 追記
+    setupModal('btnOpenHelp', 'helpBottomSheet', 'close-btn');
+
+    // タブ切り替えロジック
+    const setupTabs = () => {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabBtns.forEach(btn => {
+            btn.onclick = () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                const target = document.getElementById(btn.dataset.tab);
+                if (target) target.classList.add('active');
+            };
+        });
+    };
+    setupTabs();
 
     // 追加依頼フォームの処理
     const btnRequest = document.getElementById('btnOpenRequestForm');
@@ -118,6 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderGroup('regEvent1Tags', TAGS.eventTags, 'checkbox', 'regEvent1Tags');
         renderGroup('regEvent2Tags', [...TAGS.event2Distance, ...TAGS.event2Terrain, ...TAGS.event2State], 'radio', 'regEvent2Tags');
         renderGroup('regEvent3Tags', TAGS.eventTags, 'checkbox', 'regEvent3Tags');
+        renderGroup('regHiramekiTags', TAGS.hiramekiTags, 'checkbox', 'regHiramekiTags');
 
         // 登録用オーラアイコン
         const regAuraContainer = document.getElementById('regAura');
@@ -165,18 +185,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderAuraGroup('filterAura', TAGS.aura);
         renderGroup('filterCardType', TAGS.cardType);
         renderGroup('filterEventTags', TAGS.eventTags);
+        renderGroup('filterHiramekiTags', TAGS.hiramekiTags); // 追加
         renderGroup('filterEvent2Distance', TAGS.event2Distance);
         renderGroup('filterEvent2Terrain', TAGS.event2Terrain);
         renderGroup('filterEvent2State', TAGS.event2State);
 
-        // アコーディオン制御 (カードタイプ用)
-        const accCardType = document.getElementById('accCardType');
-        if (accCardType) {
-            const header = accCardType.querySelector('.accordion-header');
-            header.onclick = () => {
-                accCardType.classList.toggle('open');
-            };
-        }
     }
 
     // --- データ統合と表示 ---
@@ -204,7 +217,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         container.innerHTML = '';
 
         const filtered = allCards.filter(card => {
-            if (currentFilters.keyword && !card.name.includes(currentFilters.keyword)) return false;
+            if (currentFilters.keyword) {
+                const searchStr = hiraToKana(currentFilters.keyword.toLowerCase());
+                const cardName = hiraToKana(card.name.toLowerCase());
+                if (!cardName.includes(searchStr)) return false;
+            }
             if (currentFilters.rarity.length > 0 && !currentFilters.rarity.includes(card.rarity)) return false;
             if (currentFilters.monType.length > 0 && !currentFilters.monType.includes(card.monType)) return false;
             if (currentFilters.aura.length > 0 && !currentFilters.aura.includes(card.aura)) return false;
@@ -223,6 +240,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     // いずれかの選択タグが、いずれかの能力枠に含まれている
                     if (!currentFilters.eventTags.some(tag => combined.includes(tag))) return false;
                 }
+            }
+
+            // ひらめき能力フィルター
+            if (currentFilters.hiramekiTags.length > 0) {
+                const h = card.events?.hirameki || [];
+                if (!currentFilters.hiramekiTags.some(tag => h.includes(tag))) return false;
             }
 
             const e2 = card.events?.event2 || [];
@@ -280,6 +303,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const cardImg = getImgSrc(card.images.card);
         const e1Img = getImgSrc(card.images.event1);
         const e3Img = getImgSrc(card.images.event3);
+        const hImg = getImgSrc(card.images.hirameki);
 
         body.innerHTML = `
             <img src="${cardImg}" class="detail-main-img">
@@ -317,6 +341,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ${e3Img ? `<img src="${e3Img}" class="detail-event-img">` : ''}
                 <div class="detail-event-tags">
                     ${card.events.event3.length > 0 ? card.events.event3.map(t => `<span class="detail-event-tag">${t}</span>`).join('') : '<span style="color:var(--text-muted); font-size:12px;">なし</span>'}
+                </div>
+            </div>
+
+            <div class="detail-event-section">
+                <div class="detail-event-header">
+                    <h4>ひらめき能力</h4>
+                </div>
+                ${hImg ? `<img src="${hImg}" class="detail-event-img">` : ''}
+                <div class="detail-event-tags">
+                    ${card.events.hirameki?.length > 0 ? card.events.hirameki.map(t => `<span class="detail-event-tag">${t}</span>`).join('') : '<span style="color:var(--text-muted); font-size:12px;">なし</span>'}
                 </div>
             </div>
 
@@ -368,6 +402,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentFilters.aura = Array.from(document.querySelectorAll('#filterAura input:checked')).map(i => i.value);
         currentFilters.cardType = Array.from(document.querySelectorAll('#filterCardType input:checked')).map(i => i.value);
         currentFilters.eventTags = Array.from(document.querySelectorAll('#filterEventTags input:checked')).map(i => i.value);
+        currentFilters.hiramekiTags = Array.from(document.querySelectorAll('#filterHiramekiTags input:checked')).map(i => i.value); // 追加
+
+        // E2検索条件も統合して取得
+        currentFilters.event2Distance = Array.from(document.querySelectorAll('#filterEvent2Distance input:checked')).map(i => i.value);
+        currentFilters.event2Terrain = Array.from(document.querySelectorAll('#filterEvent2Terrain input:checked')).map(i => i.value);
+        currentFilters.event2State = Array.from(document.querySelectorAll('#filterEvent2State input:checked')).map(i => i.value);
 
         document.getElementById('filterBottomSheet').classList.remove('open');
         renderCards();
@@ -378,21 +418,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         // モードをデフォルト(OR)に戻すUI
         const orBtn = document.querySelector('#eventTagsMode button[data-mode="OR"]');
         if (orBtn) orBtn.click();
+
+        // タブも一番左(共通)に戻す
+        const firstTab = document.querySelector('.tab-btn[data-tab="tabCommon"]');
+        if (firstTab) firstTab.click();
+
         document.getElementById('btnApplyFilter').click();
     };
 
-    document.getElementById('btnApplyEvent2').onclick = () => {
-        currentFilters.event2Distance = Array.from(document.querySelectorAll('#filterEvent2Distance input:checked')).map(i => i.value);
-        currentFilters.event2Terrain = Array.from(document.querySelectorAll('#filterEvent2Terrain input:checked')).map(i => i.value);
-        currentFilters.event2State = Array.from(document.querySelectorAll('#filterEvent2State input:checked')).map(i => i.value);
-        document.getElementById('event2BottomSheet').classList.remove('open');
-        renderCards();
-    };
+    /**
+     * ひらがなをカタカナに変換するヘルパー
+     */
+    function hiraToKana(str) {
+        return str.replace(/[\u3041-\u3096]/g, function (match) {
+            const chr = match.charCodeAt(0) + 0x60;
+            return String.fromCharCode(chr);
+        });
+    }
 
-    document.getElementById('btnResetEvent2').onclick = () => {
-        document.querySelectorAll('#event2BottomSheet input:checked').forEach(i => i.checked = false);
-        document.getElementById('btnApplyEvent2').click();
-    };
+
 
     // --- 共通クロップ処理関数 ---
     function setupImageCropper(key, inputId, cropAreaId, cropImgId, ratioSelectorId, btnDoCropId, previewId) {
@@ -433,12 +477,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById(btnDoCropId).onclick = () => {
             const state = cropStates[key];
             if (!state.cropper) return;
-            state.cropper.getCroppedCanvas().toBlob((blob) => {
+
+            // 解像度制限の設定 (メイン画像は800px, それ以外は400px)
+            const maxDim = (key === 'card') ? 800 : 400;
+
+            // WebP形式への圧縮と解像度制限
+            state.cropper.getCroppedCanvas({
+                maxWidth: maxDim,
+                maxHeight: maxDim,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            }).toBlob((blob) => {
                 state.blob = blob;
                 const url = URL.createObjectURL(blob);
                 document.getElementById(previewId).innerHTML = `<img src="${url}">`;
                 document.getElementById(cropAreaId).style.display = 'none';
-            }, 'image/png');
+                console.log(`Image Optimized (${key}): ${Math.round(blob.size / 1024)} KB`);
+            }, 'image/webp', 0.82); // WebP形式、クオリティ0.82
         };
     }
 
@@ -446,6 +501,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupImageCropper('card', 'inputCardImg', 'cropArea', 'cropImage', 'aspectRatioSelector', 'btnDoCrop', 'previewCardImg');
     setupImageCropper('event1', 'inputEvent1Img', 'cropAreaEvent1', 'cropImageEvent1', 'aspectRatioSelectorEvent1', 'btnDoCropEvent1', 'previewEvent1Img');
     setupImageCropper('event3', 'inputEvent3Img', 'cropAreaEvent3', 'cropImageEvent3', 'aspectRatioSelectorEvent3', 'btnDoCropEvent3', 'previewEvent3Img');
+    setupImageCropper('hirameki', 'inputHiramekiImg', 'cropAreaHirameki', 'cropImageHirameki', 'aspectRatioSelectorHirameki', 'btnDoCropHirameki', 'previewHiramekiImg');
 
     // --- カード編集モード ---
     function openEditModal(card) {
@@ -472,16 +528,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         setTags('regEvent1Tags', card.events.event1);
         setTags('regEvent2Tags', card.events.event2);
         setTags('regEvent3Tags', card.events.event3);
+        setTags('regHiramekiTags', card.events.hirameki || []);
 
         // 画像のプレビュー (既存)
         document.getElementById('previewCardImg').innerHTML = `<img src="${getImgSrc(card.images.card)}">`;
         document.getElementById('previewEvent1Img').innerHTML = card.images.event1 ? `<img src="${getImgSrc(card.images.event1)}">` : '';
         document.getElementById('previewEvent3Img').innerHTML = card.images.event3 ? `<img src="${getImgSrc(card.images.event3)}">` : '';
+        document.getElementById('previewHiramekiImg').innerHTML = card.images.hirameki ? `<img src="${getImgSrc(card.images.hirameki)}">` : '';
 
         // クロップ用の一時保持（変更しない場合はこれを使う）
         cropStates.card.blob = card.images.card;
         cropStates.event1.blob = card.images.event1;
         cropStates.event3.blob = card.images.event3;
+        cropStates.hirameki.blob = card.images.hirameki;
 
         document.getElementById('registerModal').classList.add('open');
     }
@@ -495,6 +554,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('previewCardImg').innerHTML = '';
         document.getElementById('previewEvent1Img').innerHTML = '';
         document.getElementById('previewEvent3Img').innerHTML = '';
+        document.getElementById('previewHiramekiImg').innerHTML = '';
         document.querySelector('#registerModal h2').textContent = 'カード登録';
         document.getElementById('btnSaveCard').textContent = '保存';
     }
@@ -518,12 +578,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             images: {
                 card: cropStates.card.blob,
                 event1: cropStates.event1.blob || null,
-                event3: cropStates.event3.blob || null
+                event3: cropStates.event3.blob || null,
+                hirameki: cropStates.hirameki.blob || null
             },
             events: {
                 event1: getCheckedValues('regEvent1Tags'),
                 event2: getCheckedValues('regEvent2Tags'),
-                event3: getCheckedValues('regEvent3Tags')
+                event3: getCheckedValues('regEvent3Tags'),
+                hirameki: getCheckedValues('regHiramekiTags')
             },
             source: 'user',
             createdAt: editingCardId ? allCards.find(c => c.id === editingCardId)?.createdAt : new Date().toISOString()
@@ -541,6 +603,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('previewCardImg').innerHTML = '';
         document.getElementById('previewEvent1Img').innerHTML = '';
         document.getElementById('previewEvent3Img').innerHTML = '';
+        document.getElementById('previewHiramekiImg').innerHTML = '';
         document.getElementById('registerModal').classList.remove('open');
         await refreshApp();
     };
@@ -559,12 +622,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // マスターデータでは images/assist/ 配下を想定
                 card: `images/assist/${card.name}.png`,
                 event1: card.images.event1 ? `images/assist/${card.name}_event1.png` : null,
-                event3: card.images.event3 ? `images/assist/${card.name}_event3.png` : null
+                event3: card.images.event3 ? `images/assist/${card.name}_event3.png` : null,
+                hirameki: card.images.hirameki ? `images/assist/${card.name}_hirameki.png` : null
             },
             events: {
                 event1: card.events.event1 || [],
                 event2: card.events.event2 || [],
-                event3: card.events.event3 || []
+                event3: card.events.event3 || [],
+                hirameki: card.events.hirameki || []
             },
             source: "master", // マスターデータとして扱う
             createdAt: card.createdAt

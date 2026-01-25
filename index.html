@@ -42,9 +42,6 @@
                 </svg>
                 <span>フィルタ</span>
             </button>
-            <button id="btnOpenEvent2Search" class="event2-search-btn">
-                <span>E2検索</span>
-            </button>
         </div>
     </header>
 
@@ -52,65 +49,103 @@
         <!-- カード画像が3列グリッドでここに挿入されます -->
     </main>
 
-    <!-- フィルタ・ボトムシート -->
+    <!-- フィルタ・ボトムシート (統合版) -->
     <div id="filterBottomSheet" class="bottom-sheet">
         <div class="bottom-sheet-content">
             <div class="bottom-sheet-header">
                 <h2>フィルター</h2>
-                <button class="close-btn" data-close="filterBottomSheet">&times;</button>
-            </div>
-            <div class="filter-group" style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="margin-bottom:0;">検索方式</h3>
-                <div class="segment-control" id="eventTagsMode">
-                    <button type="button" data-mode="OR" class="active">OR</button>
-                    <button type="button" data-mode="AND">AND</button>
+                <div class="header-right-actions">
+                    <button class="close-btn" data-close="filterBottomSheet">&times;</button>
                 </div>
             </div>
-            <div class="filter-group">
-                <h3>レアリティ</h3>
-                <div class="chip-group" id="filterRarity">
-                    <label class="chip"><input type="checkbox" value="MR"><span>MR</span></label>
-                    <label class="chip"><input type="checkbox" value="SSR"><span>SSR</span></label>
-                    <label class="chip"><input type="checkbox" value="SR"><span>SR</span></label>
-                    <label class="chip"><input type="checkbox" value="R"><span>R</span></label>
-                </div>
+
+            <!-- タブナビゲーション -->
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="tabCommon">共通</button>
+                <button class="tab-btn" data-tab="tabAbility">能力</button>
+                <button class="tab-btn" data-tab="tabEvent2">イベ2</button>
             </div>
-            <div class="filter-group">
-                <h3>モン類</h3>
-                <div class="chip-group" id="filterMonType">
-                    <label class="chip"><input type="checkbox" value="無機"><span>無機</span></label>
-                    <label class="chip"><input type="checkbox" value="創造"><span>創造</span></label>
-                    <label class="chip"><input type="checkbox" value="幻霊"><span>幻霊</span></label>
-                    <label class="chip"><input type="checkbox" value="魔族"><span>魔族</span></label>
-                    <label class="chip"><input type="checkbox" value="獣族"><span>獣族</span></label>
-                    <label class="chip"><input type="checkbox" value="怪物"><span>怪物</span></label>
+
+            <!-- タブコンテンツ: 共通 -->
+            <div id="tabCommon" class="tab-content active">
+                <div class="filter-group">
+                    <h3>レアリティ</h3>
+                    <div class="chip-group" id="filterRarity">
+                        <label class="chip"><input type="checkbox" value="MR"><span>MR</span></label>
+                        <label class="chip"><input type="checkbox" value="SSR"><span>SSR</span></label>
+                        <label class="chip"><input type="checkbox" value="SR"><span>SR</span></label>
+                        <label class="chip"><input type="checkbox" value="R"><span>R</span></label>
+                    </div>
                 </div>
-            </div>
-            <div class="filter-group">
-                <h3>オーラ</h3>
-                <div class="chip-group icon-chip-group" id="filterAura">
-                    <!-- JSで動的に注入 (アイコン化) -->
+                <div class="filter-group">
+                    <h3>モン類</h3>
+                    <div class="chip-group" id="filterMonType">
+                        <label class="chip"><input type="checkbox" value="無機"><span>無機</span></label>
+                        <label class="chip"><input type="checkbox" value="創造"><span>創造</span></label>
+                        <label class="chip"><input type="checkbox" value="幻霊"><span>幻霊</span></label>
+                        <label class="chip"><input type="checkbox" value="魔族"><span>魔族</span></label>
+                        <label class="chip"><input type="checkbox" value="獣族"><span>獣族</span></label>
+                        <label class="chip"><input type="checkbox" value="怪物"><span>怪物</span></label>
+                    </div>
                 </div>
-            </div>
-            <div class="filter-group accordion" id="accCardType">
-                <div class="accordion-header">
+                <div class="filter-group">
+                    <h3>オーラ</h3>
+                    <div class="chip-group icon-chip-group" id="filterAura">
+                        <!-- JSで動的に注入 -->
+                    </div>
+                </div>
+                <div class="filter-group">
                     <h3>カードタイプ</h3>
-                    <svg viewBox="0 0 24 24" width="20" height="20" class="arrow">
-                        <path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
-                    </svg>
-                </div>
-                <div class="accordion-content">
                     <div class="chip-group" id="filterCardType">
                         <!-- JSで動的に注入 -->
                     </div>
                 </div>
             </div>
-            <div class="filter-group">
-                <h3>能力</h3>
-                <div class="chip-group" id="filterEventTags">
-                    <!-- JSで動的に注入 -->
+
+            <!-- タブコンテンツ: 能力 -->
+            <div id="tabAbility" class="tab-content">
+                <div class="filter-group">
+                    <div class="filter-header-flex">
+                        <h3>イベント能力</h3>
+                        <div class="segment-control" id="eventTagsMode">
+                            <button type="button" data-mode="OR" class="active">OR</button>
+                            <button type="button" data-mode="AND">AND</button>
+                        </div>
+                    </div>
+                    <div class="chip-group" id="filterEventTags">
+                        <!-- JSで動的に注入 -->
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <h3>ひらめき能力</h3>
+                    <div class="chip-group" id="filterHiramekiTags">
+                        <!-- JSで動的に注入 -->
+                    </div>
                 </div>
             </div>
+
+            <!-- タブコンテンツ: イベ2 -->
+            <div id="tabEvent2" class="tab-content">
+                <div class="filter-group">
+                    <h3>距離適正</h3>
+                    <div class="chip-group" id="filterEvent2Distance">
+                        <!-- JSで動的に注入 -->
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <h3>地形適正</h3>
+                    <div class="chip-group" id="filterEvent2Terrain">
+                        <!-- JSで動的に注入 -->
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <h3>状態変化</h3>
+                    <div class="chip-group" id="filterEvent2State">
+                        <!-- JSで動的に注入 -->
+                    </div>
+                </div>
+            </div>
+
             <div class="action-footer">
                 <button id="btnResetFilter" class="secondary-btn">リセット</button>
                 <button id="btnApplyFilter" class="primary-btn">適用</button>
@@ -118,37 +153,7 @@
         </div>
     </div>
 
-    <!-- イベント2専用検索・ボトムシート -->
-    <div id="event2BottomSheet" class="bottom-sheet">
-        <div class="bottom-sheet-content">
-            <div class="bottom-sheet-header">
-                <h2>イベント②検索</h2>
-                <button class="close-btn" data-close="event2BottomSheet">&times;</button>
-            </div>
-            <div class="filter-group">
-                <h3>距離適正</h3>
-                <div class="chip-group" id="filterEvent2Distance">
-                    <!-- JSで動的に注入 -->
-                </div>
-            </div>
-            <div class="filter-group">
-                <h3>地形適正</h3>
-                <div class="chip-group" id="filterEvent2Terrain">
-                    <!-- JSで動的に注入 -->
-                </div>
-            </div>
-            <div class="filter-group">
-                <h3>状態変化</h3>
-                <div class="chip-group" id="filterEvent2State">
-                    <!-- JSで動的に注入 -->
-                </div>
-            </div>
-            <div class="action-footer">
-                <button id="btnResetEvent2" class="secondary-btn">リセット</button>
-                <button id="btnApplyEvent2" class="primary-btn">適用</button>
-            </div>
-        </div>
-    </div>
+
 
     <!-- 新規登録モーダル (フルスクリーン) -->
     <div id="registerModal" class="full-modal">
@@ -281,6 +286,35 @@
                         </div>
                     </div>
                     <div id="previewEvent3Img" class="img-preview mini"></div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="form-section">
+                <h3>ひらめき能力</h3>
+                <div class="form-group">
+                    <label>能力選択</label>
+                    <div class="chip-group" id="regHiramekiTags">
+                        <!-- JSで動的に追加 -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>能力画像 (任意)</label>
+                    <input type="file" id="inputHiramekiImg" accept="image/*">
+                    <div id="cropAreaHirameki" class="crop-area" style="display:none;">
+                        <img id="cropImageHirameki">
+                        <div class="crop-controls">
+                            <div class="aspect-ratio-selector" id="aspectRatioSelectorHirameki">
+                                <button type="button" data-ratio="NaN">Free</button>
+                                <button type="button" data-ratio="1" class="active">1:1</button>
+                                <button type="button" data-ratio="1.333">4:3</button>
+                                <button type="button" data-ratio="1.777">16:9</button>
+                            </div>
+                            <button type="button" id="btnDoCropHirameki" class="primary-btn">確定</button>
+                        </div>
+                    </div>
+                    <div id="previewHiramekiImg" class="img-preview mini"></div>
                 </div>
             </div>
         </form>
