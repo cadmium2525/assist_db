@@ -261,12 +261,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             return true;
         });
 
-        // ソート: レアリティ順 (MR > SSR > SR > R) -> その中で新しい順
+        // ソート: レアリティ順 (MR > SSR > SR > R) -> オーラ順 (赤青黄緑白黒) -> その中で新しい順
         const rarityPriority = { "MR": 4, "SSR": 3, "SR": 2, "R": 1 };
+        const auraPriority = { "赤": 1, "青": 2, "黄": 3, "緑": 4, "白": 5, "黒": 6 };
+
         filtered.sort((a, b) => {
-            const pA = rarityPriority[a.rarity] || 0;
-            const pB = rarityPriority[b.rarity] || 0;
-            if (pA !== pB) return pB - pA; // レアリティが高い順
+            const rA = rarityPriority[a.rarity] || 0;
+            const rB = rarityPriority[b.rarity] || 0;
+            if (rA !== rB) return rB - rA; // レアリティが高い順
+
+            const auA = auraPriority[a.aura] || 99;
+            const auB = auraPriority[b.aura] || 99;
+            if (auA !== auB) return auA - auB; // オーラ順 (指定順)
+
             return new Date(b.createdAt) - new Date(a.createdAt); // 日時が新しい順
         });
 
