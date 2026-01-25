@@ -97,7 +97,7 @@ window.MASTER_ASSISTS = [
                 "アディション",
                 "ダメ連撃"
             ],
-            "hirameki": ["クリダメup"]
+            "hirameki": ["クリダメup","守護"]
         },
         "source": "master",
         "createdAt": "2026-01-24T13:02:43.454Z"
@@ -185,5 +185,100 @@ window.MASTER_ASSISTS = [
     },
     "source": "master",
     "createdAt": "2026-01-25T01:41:32.821Z"
+},
+{
+    "id": "5d174cac-a980-4b95-b863-ab5e7a0e9387",
+    "name": "[シラヌイ]ナデシコ",
+    "rarity": "MR",
+    "monType": "魔族",
+    "aura": "白",
+    "cardType": "サバイブ",
+    "images": {
+        "card": "images/assist/[シラヌイ]ナデシコ.png",
+        "event1": "images/assist/[シラヌイ]ナデシコ_event1.png",
+        "event3": "images/assist/[シラヌイ]ナデシコ_event3.png",
+        "hirameki": "images/assist/[シラヌイ]ナデシコ_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "ステ連撃"
+        ],
+        "event2": [
+            "近距離"
+        ],
+        "event3": [
+            "命中率up",
+            "連撃軽減・無効・回避"
+        ],
+        "hirameki": [
+            "不屈",
+            "堅固",
+            "シールド"
+        ]
+    },
+    "source": "master",
+    "createdAt": "2026-01-25T12:23:47.460Z"
+},
+{
+    "id": "ebabbc7b-3c29-4f3a-8a91-866be8fc0f83",
+    "name": "[ムー]メガラニカ",
+    "rarity": "MR",
+    "monType": "魔族",
+    "aura": "黒",
+    "cardType": "メンタル",
+    "images": {
+        "card": "images/assist/[ムー]メガラニカ.png",
+        "event1": "images/assist/[ムー]メガラニカ_event1.png",
+        "event3": "images/assist/[ムー]メガラニカ_event3.png",
+        "hirameki": "images/assist/[ムー]メガラニカ_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "クリダメup",
+            "クリ率up",
+            "シールド"
+        ],
+        "event2": [
+            "超憤怒"
+        ],
+        "event3": [
+            "ダメ連撃"
+        ],
+        "hirameki": [
+            "連撃"
+        ]
+    },
+    "source": "master",
+    "createdAt": "2026-01-25T12:17:24.909Z"
+},
+{
+    "id": "d29b10da-4021-4795-a367-fc4ed1fb700e",
+    "name": "[メルホイップ]ドルチェ",
+    "rarity": "MR",
+    "monType": "創造",
+    "aura": "緑",
+    "cardType": "アサルト",
+    "images": {
+        "card": "images/assist/[メルホイップ]ドルチェ.png",
+        "event1": "images/assist/[メルホイップ]ドルチェ_event1.png",
+        "event3": "images/assist/[メルホイップ]ドルチェ_event3.png",
+        "hirameki": "images/assist/[メルホイップ]ドルチェ_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "アディション"
+        ],
+        "event2": [
+            "超逆上"
+        ],
+        "event3": [
+            "ガッツ回復"
+        ],
+        "hirameki": [
+            "連撃"
+        ]
+    },
+    "source": "master",
+    "createdAt": "2026-01-25T12:02:54.400Z"
 },
 ];
