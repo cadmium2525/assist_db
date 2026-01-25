@@ -3,7 +3,7 @@
  */
 document.addEventListener('DOMContentLoaded', async () => {
     // 定数定義 (タグ・カードタイプ等)
-    const COMMON_EVENT_TAGS = ["ステup", "クリダメup", "命中率up", "クリ率up", "ステ連撃", "ダメ連撃", "アディション", "完全回避", "シールド", "必中", "デバフ", "連撃軽減・無効・回避", "クリ無効", "被ダメカット",　"被ダメ軽減", "ガッツ回復"];
+    const COMMON_EVENT_TAGS = ["ステup", "クリダメup", "命中率up", "クリ率up", "ステ連撃", "ダメ連撃", "アディション", "完全回避", "シールド", "必中", "デバフ", "連撃軽減・無効・回避", "クリ無効", "被ダメカット", "被ダメ軽減", "ガッツ回復"];
     const HIRAMEKI_TAGS = ["不屈", "堅固", "シールド", "連撃", "クリダメup", "守護"];
 
     const TAGS = {
@@ -298,6 +298,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function showDetail(card) {
         const modal = document.getElementById('detailBottomSheet');
         const body = document.getElementById('detailBody');
+
         document.getElementById('detailName').textContent = card.name;
 
         const cardImg = getImgSrc(card.images.card);
@@ -376,6 +377,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             };
             document.getElementById('btnExportCard').onclick = () => exportToJSON(card);
+        }
+
+        // DOM更新後にスクロール位置を強制リセット (タイミングを少し遅らせる)
+        const content = modal.querySelector('.bottom-sheet-content');
+        if (content) {
+            setTimeout(() => {
+                content.scrollTo({ top: 0, behavior: 'instant' });
+            }, 10);
         }
 
         modal.classList.add('open');

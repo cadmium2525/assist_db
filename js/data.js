@@ -281,4 +281,33 @@ window.MASTER_ASSISTS = [
     "source": "master",
     "createdAt": "2026-01-25T12:02:54.400Z"
 },
+{
+    "id": "7d1c32f5-15d0-45fd-a134-58842c1361ea",
+    "name": "[神聖な巫女姿]ステラ",
+    "rarity": "MR",
+    "monType": "無し",
+    "aura": "白",
+    "cardType": "友人",
+    "images": {
+        "card": "images/assist/[神聖な巫女姿]ステラ.png",
+        "event1": "images/assist/[神聖な巫女姿]ステラ_event1.png",
+        "event3": "images/assist/[神聖な巫女姿]ステラ_event3.png",
+        "hirameki": null
+    },
+    "events": {
+        "event1": [
+            "クリ無効",
+            "被ダメカット"
+        ],
+        "event2": [],
+        "event3": [
+            "ステup",
+            "必中",
+            "被ダメ軽減"
+        ],
+        "hirameki": []
+    },
+    "source": "master",
+    "createdAt": "2026-01-25T12:35:50.083Z"
+},
 ];
