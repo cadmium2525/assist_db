@@ -151,7 +151,7 @@ window.MASTER_ASSISTS = [
             "超必死"
         ],
         "event3": [
-            "ステup"
+            "与ダメup","ガッツダメup"
         ],
         "hirameki": []
     },
@@ -301,7 +301,7 @@ window.MASTER_ASSISTS = [
         ],
         "event2": [],
         "event3": [
-            "ステup",
+            "与ダメup",
             "必中",
             "被ダメ軽減"
         ],
@@ -397,5 +397,273 @@ window.MASTER_ASSISTS = [
     },
     "source": "master",
     "createdAt": "2026-01-25T13:46:22.896Z"
+},
+{
+    "id": "d641161e-e940-45ad-97a0-ad856e1d8cbd",
+    "name": "[ハム]リストン",
+    "rarity": "MR",
+    "monType": "獣族",
+    "aura": "黄",
+    "cardType": "フォース",
+    "images": {
+        "card": "images/assist/[ハム]リストン.png",
+        "event1": "images/assist/[ハム]リストン_event1.png",
+        "event3": "images/assist/[ハム]リストン_event3.png",
+        "hirameki": "images/assist/[ハム]リストン_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "ステ連撃"
+        ],
+        "event2": [
+            "超根性"
+        ],
+        "event3": [
+            "技ダメup"
+        ],
+        "hirameki": []
+    },
+    "source": "master",
+    "createdAt": "2026-01-26T11:04:59.239Z"
+},
+{
+    "id": "e4cda8b8-f0ff-4637-9036-dadf34c66667",
+    "name": "[凛々しき明星]クリス",
+    "rarity": "MR",
+    "monType": "無し",
+    "aura": "青",
+    "cardType": "友人",
+    "images": {
+        "card": "images/assist/[凛々しき明星]クリス.png",
+        "event1": "images/assist/[凛々しき明星]クリス_event1.png",
+        "event3": "images/assist/[凛々しき明星]クリス_event3.png",
+        "hirameki": null
+    },
+    "events": {
+        "event1": [
+            "連撃軽減・無効・回避",
+            "被ダメ軽減"
+        ],
+        "event2": [],
+        "event3": [
+            "デバフ"
+        ],
+        "hirameki": []
+    },
+    "source": "master",
+    "createdAt": "2026-01-26T09:55:03.362Z"
+},
+{
+    "id": "3d7ba5de-f3e5-46d7-bca4-10994fa3a227",
+    "name": "[メタルナー]キャトル",
+    "rarity": "MR",
+    "monType": "創造",
+    "aura": "白",
+    "cardType": "ガード",
+    "images": {
+        "card": "images/assist/[メタルナー]キャトル.png",
+        "event1": "images/assist/[メタルナー]キャトル_event1.png",
+        "event3": "images/assist/[メタルナー]キャトル_event3.png",
+        "hirameki": "images/assist/[メタルナー]キャトル_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "与ダメup","ガッツ回復"
+        ],
+        "event2": [
+            "超根性"
+        ],
+        "event3": [
+            "アディション"
+        ],
+        "hirameki": []
+    },
+    "source": "master",
+    "createdAt": "2026-01-25T22:53:42.780Z"
+},
+{
+    "id": "b3bf98b3-3f0e-4195-b0b9-b2ec548e161f",
+    "name": "[スプーキー]スケアクロウ",
+    "rarity": "MR",
+    "monType": "怪物",
+    "aura": "緑",
+    "cardType": "フィジカル",
+    "images": {
+        "card": "images/assist/[スプーキー]スケアクロウ.png",
+        "event1": "images/assist/[スプーキー]スケアクロウ_event1.png",
+        "event3": "images/assist/[スプーキー]スケアクロウ_event3.png",
+        "hirameki": "images/assist/[スプーキー]スケアクロウ_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "デバフ"
+        ],
+        "event2": [
+            "砂漠"
+        ],
+        "event3": [
+            "ステ連撃"
+        ],
+        "hirameki": [
+            "連撃"
+        ]
+    },
+    "source": "master",
+    "createdAt": "2026-01-26T10:32:27.853Z"
+},
+{
+    "id": "6da3f4b9-ec99-4418-9899-d6b1cfa37d6b",
+    "name": "[キジン]スズカ",
+    "rarity": "MR",
+    "monType": "怪物",
+    "aura": "黄",
+    "cardType": "フィジカル",
+    "images": {
+        "card": "images/assist/[キジン]スズカ.png",
+        "event1": "images/assist/[キジン]スズカ_event1.png",
+        "event3": "images/assist/[キジン]スズカ_event3.png",
+        "hirameki": "images/assist/[キジン]スズカ_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "命中率up",
+            "クリ率up"
+        ],
+        "event2": [
+            "零距離"
+        ],
+        "event3": [
+            "与ダメup",
+            "クリダメup"
+        ],
+        "hirameki": []
+    },
+    "source": "master",
+    "createdAt": "2026-01-26T10:36:40.667Z"
+},
+{
+    "id": "028c23ff-2e8d-48f4-b3df-c704bc4eeaff",
+    "name": "[フラン]ブライド",
+    "rarity": "MR",
+    "monType": "怪物",
+    "aura": "緑",
+    "cardType": "フォース",
+    "images": {
+        "card": "images/assist/[フラン]ブライド.png",
+        "event1": null,
+        "event3": null,
+        "hirameki": null
+    },
+    "events": {
+        "event1": [
+            "ダメ連撃"
+        ],
+        "event2": [
+            "超根性"
+        ],
+        "event3": [
+            "完全回避",
+            "シールド"
+        ],
+        "hirameki": [
+            "不屈",
+            "堅固",
+            "シールド"
+        ]
+    },
+    "source": "master",
+    "createdAt": "2026-02-01T13:51:58.929Z"
+},
+{
+    "id": "caee5286-3db4-49c4-86b1-b3b5d25d59c7",
+    "name": "[陽だまりの巫女姫]シュナ",
+    "rarity": "MR",
+    "monType": "無し",
+    "aura": "赤",
+    "cardType": "友人",
+    "images": {
+        "card": "images/assist/[陽だまりの巫女姫]シュナ.png",
+        "event1": "images/assist/[陽だまりの巫女姫]シュナ_event1.png",
+        "event3": "images/assist/[陽だまりの巫女姫]シュナ_event3.png",
+        "hirameki": null
+    },
+    "events": {
+        "event1": [
+            "与ダメup",
+            "連撃軽減・無効・回避",
+            "被ダメカット"
+        ],
+        "event2": [],
+        "event3": [
+            "デバフ"
+        ],
+        "hirameki": []
+    },
+    "source": "master",
+    "createdAt": "2026-02-01T14:01:16.679Z"
+},
+{
+    "id": "b0352365-c09d-4687-a52f-14d06f388c6d",
+    "name": "[波乗りテンペスト]リムル",
+    "rarity": "MR",
+    "monType": "魔族",
+    "aura": "青",
+    "cardType": "クイック",
+    "images": {
+        "card": "images/assist/[波乗りテンペスト]リムル.png",
+        "event1": "images/assist/[波乗りテンペスト]リムル_event1.png",
+        "event3": "images/assist/[波乗りテンペスト]リムル_event3.png",
+        "hirameki": "images/assist/[波乗りテンペスト]リムル_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "技ダメup",
+            "与ダメup"
+        ],
+        "event2": [
+            "零距離"
+        ],
+        "event3": [
+            "ダメ連撃",
+            "連撃軽減・無効・回避"
+        ],
+        "hirameki": [
+            "連撃"
+        ]
+    },
+    "source": "master",
+    "createdAt": "2026-02-01T14:03:32.075Z"
+},
+{
+    "id": "30aaae67-f07f-4a38-bfbf-c719efc26217",
+    "name": "[ゴースト]オフリィ",
+    "rarity": "MR",
+    "monType": "怪物",
+    "aura": "黄",
+    "cardType": "ジャッジ",
+    "images": {
+        "card": "images/assist/[ゴースト]オフリィ.png",
+        "event1":"images/assist/[ゴースト]オフリィ_event1.png",
+        "event3":"images/assist/[ゴースト]オフリィ_event3.png",
+        "hirameki": "images/assist/[ゴースト]オフリィ_hirameki.png"
+    },
+    "events": {
+        "event1": [
+            "完全回避",
+            "被ダメ軽減"
+        ],
+        "event2": [
+            "超余裕"
+        ],
+        "event3": [
+            "命中率up",
+            "連撃軽減・無効・回避"
+        ],
+        "hirameki": [
+            "連撃"
+        ]
+    },
+    "source": "master",
+    "createdAt": "2026-02-01T14:10:45.798Z"
 },
 ];
